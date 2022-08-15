@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Aluno</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Início</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        <h2>Registrar</h2>
+        <form action="" method="POST">
+            <!-- Name input -->
+            <div class="form-outline mb-4">
+                <label class="form-label" for="registerName">Nome</label>
+                <input type="text" id="registerName" class="form-control" name="nome" />
+            </div>
+
+            <!-- Username input -->
+            <div class="form-outline mb-4">
+                <label class="form-label" for="registerUsername">Sobrenome</label>
+                <input type="text" id="registerUsername" class="form-control" name="sobrenome" />
+            </div>
+
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+                <label class="form-label" for="registerEmail">E-mail</label>
+                <input type="email" id="registerEmail" class="form-control" name="email" />
+            </div>
+
+            <!-- Password input -->
+            <div class="form-outline mb-4">
+                <label class="form-label" for="registerPassword">Senha</label>
+                <input type="password" id="registerPassword" class="form-control" name="senha1"/>
+            </div>
+
+            <!-- Repeat Password input -->
+            <div class="form-outline mb-4">
+                <label class="form-label" for="registerRepeatPassword">Repetir a senha</label>
+                <input type="password" id="registerRepeatPassword" class="form-control" name="senha2" />
+            </div>
+
+            <!-- Checkbox -->
+            <div class="form-check d-flex justify-content-center mb-4">
+                <input class="form-check-input me-2" type="checkbox" value="" id="registerCheck" checked
+                    aria-describedby="registerCheckHelpText" name="terms" />
+                <label class="form-check-label" for="registerCheck">
+                    Concordo com os termos de uso
+                </label>
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary btn-block mb-3">Registar</button>
+        </form>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+    integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"
+    integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK"
+    crossorigin="anonymous"></script>
+<script src="/js/bootstrap.js"></script>
+
+</html>
