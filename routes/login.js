@@ -13,7 +13,6 @@ const Usuario = mongoose.model('usuarios')
 
 // Criar Usuário
 router.get('/cadastro', async (req, res) => {
-    // res.sendFile(path.join(__dirname,'../views/geral/cadastro.html'))
     res.status(200).json({ msg: 'Página de cadastro' })
 })
 
@@ -48,6 +47,39 @@ router.post('/cadastrar', async (req, res) => {
     } catch (err) {
         return res.status(400).json({
             error: true,
+            msg: err.errors
+        })
+    }
+})
+
+// Usuário Logar
+router.get('/login', async (req, res) => {
+    res.json({ msg: 'Página de login' })
+})
+
+router.post('/logado', async (req, res) => {
+    const User = await Usuario.findOne({ email: req.body.email })
+
+    const schema = yup.object().shape({
+        email: yup.string().email('O usuário precisa ser um e-mail.').required('O e-mail é obrigatório').trim(),
+        senha: yup.string().required('A senha é obrigatória').trim()
+    })
+
+    try {
+        await schema.validate(req.body)
+        if(User === null) {
+            res.status(404).json({msg: 'Usuário não encontrado'})
+        } else if (!(await bcrypt.compare(req.body.senha, User.senha))) {
+            res.status(401).json({msg: 'Senha incorreta'})
+        } else {
+            const token = jwt.sign({userId: User._id}, SECRET, {expiresIn: 600})
+            res.status(200).json({
+                msg: 'Usuário logado com sucesso',
+                token: token
+            })
+        }
+    } catch (err) {
+        return res.status(400).json({
             msg: err.errors
         })
     }

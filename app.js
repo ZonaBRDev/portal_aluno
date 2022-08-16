@@ -1,6 +1,7 @@
 const express = require('express')
 const path = require('path')
 const mongoose = require('mongoose')
+const verifyJWT = require('./verifyJWT')
 const PORT = process.env.PORT || 5554
 const app = express()
 
@@ -28,9 +29,11 @@ mongoose.connect('mongodb://localhost/portalaluno', async () => {
 app.get('/', (req, res) => {
     res.sendFile(__dirname+'/views/geral/index.html')
 })
-
 app.use(login)
 
+
+
+// Server
 app.listen(PORT, () => {
     console.log('Servdor rodando na URL: http://localhost:5554/')
 })
