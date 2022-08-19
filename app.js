@@ -5,14 +5,15 @@ const verifyJWT = require('./verifyJWT')
 const PORT = process.env.PORT || 5554
 const app = express()
 
-// Imports Routes
+// Import Routes
 const login = require('./routes/login')
 const prof = require('./routes/prof')
 const admin = require ('./routes/admin')
 
-// Imports Permissions
+// Import Permissions
 const eProf = require('./permissions/eProf')
-
+const eAluno = require('./permissions/eAluno')
+const eAdmin = require('./permissions/eAdmin')
 
 // Configs
 app.use(express.urlencoded({ extended: true }))
@@ -39,6 +40,7 @@ app.get('/', (req, res) => {
 app.use(login)
 app.use('/prof', eProf, verifyJWT, prof)
 app.use('/admin', admin)
+// app.use('/prof', prof)
 
 
 // Server
