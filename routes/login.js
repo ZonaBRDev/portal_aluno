@@ -43,7 +43,6 @@ router.post('/cadastrar', async (req, res) => {
         }).catch((err) => {
             res.status(400).json({ msg: 'Erro ao criar o usuário.' })
         })
-
     } catch (err) {
         return res.status(400).json({
             error: true,
@@ -67,12 +66,12 @@ router.post('/logado', async (req, res) => {
 
     try {
         await schema.validate(req.body)
-        if(User === null) {
-            res.status(404).json({msg: 'Usuário não encontrado'})
+        if (User === null) {
+            res.status(404).json({ msg: 'Usuário não encontrado' })
         } else if (!(await bcrypt.compare(req.body.senha, User.senha))) {
-            res.status(401).json({msg: 'Senha incorreta'})
+            res.status(401).json({ msg: 'Senha incorreta' })
         } else {
-            const token = jwt.sign({userId: User._id}, SECRET, {expiresIn: 600})
+            const token = jwt.sign({ userId: User._id }, SECRET, { expiresIn: 600 })
             res.status(200).json({
                 msg: 'Usuário logado com sucesso',
                 token: token
