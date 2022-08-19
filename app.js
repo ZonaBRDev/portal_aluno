@@ -8,10 +8,9 @@ const app = express()
 // Imports Routes
 const login = require('./routes/login')
 const prof = require('./routes/prof')
-const admin = require ('./routes/admin')
 
 // Imports Permissions
-const eProf = require('./permissions/eProf')
+const eProf = require('./permissions/prof')
 
 
 // Configs
@@ -38,7 +37,6 @@ app.get('/', (req, res) => {
 })
 app.use(login)
 app.use('/prof', eProf, verifyJWT, prof)
-app.use('/admin', admin)
 
 
 // Server
