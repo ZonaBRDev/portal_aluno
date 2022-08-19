@@ -5,8 +5,13 @@ const verifyJWT = require('./verifyJWT')
 const PORT = process.env.PORT || 5554
 const app = express()
 
-// Imports
+// Imports Routes
 const login = require('./routes/login')
+const prof = require('./routes/prof')
+
+// Imports Permissions
+const eProf = require('./permissions/prof')
+
 
 // Configs
 app.use(express.urlencoded({ extended: true }))
@@ -27,10 +32,11 @@ mongoose.connect('mongodb://localhost/portalaluno', async () => {
 
 // Routes
 app.get('/', (req, res) => {
-    res.sendFile(__dirname+'/views/geral/index.html')
+    // res.sendFile(__dirname+'/views/geral/index.html')
+    res.json('Login Page')
 })
 app.use(login)
-
+app.use('/prof', eProf, verifyJWT, prof)
 
 
 // Server
