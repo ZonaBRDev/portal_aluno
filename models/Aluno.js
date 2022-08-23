@@ -25,7 +25,19 @@ const Aluno = new Schema({
         type: Date,
         required: true
     },
-    Date: {
+    email: {
+        type: String,
+        required: true
+    },
+    senha: {
+        type: String,
+        required: true
+    },
+    permissao: {
+        type: Number,
+        default: 0
+    },
+    date: {
         type: Date,
         default: Date.now()
     }

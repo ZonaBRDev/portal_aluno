@@ -25,7 +25,19 @@ const Professor = new Schema({
         type: Date,
         required: true
     },
-    Date: {
+    email: {
+        type: String,
+        required: true
+    },
+    senha: {
+        type: String,
+        required: true
+    },
+    permissao: {
+        type: Number,
+        default: 1
+    },
+    date: {
         type: Date,
         default: Date.now()
     }

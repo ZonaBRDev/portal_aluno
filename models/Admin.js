@@ -1,31 +1,24 @@
+const express = require('express')
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const Usuario = new Schema({
-    nome: {
-        type: String,
-        required: true
-    },
-    sobrenome: {
-        type: String,
-        required: true
-    },
+const Admin = new Schema ({
     email: {
         type: String,
         required: true
-    }, 
+    },
     senha: {
         type: String,
-        required: true,
-    }, 
+        required: true
+    },
     permissao: {
         type: Number,
-        default: 0
+        default: 2
     },
-    Data: {
+    date: {
         type: Date,
         default: Date.now()
     }
 })
 
-mongoose.model('usuarios', Usuario)
+mongoose.model('admins', Admin)

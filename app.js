@@ -9,6 +9,7 @@ const app = express()
 const login = require('./routes/login')
 const prof = require('./routes/prof')
 const admin = require ('./routes/admin')
+const aluno = require ('./routes/aluno')
 
 // Import Permissions
 const eProf = require('./permissions/eProf')
@@ -38,10 +39,9 @@ app.get('/', (req, res) => {
     res.json('Login Page')
 })
 app.use(login)
-app.use('/prof', eProf, verifyJWT, prof)
-app.use('/admin', admin)
-// app.use('/prof', prof)
-
+app.use('/prof', verifyJWT, eProf, prof)
+app.use('/admin', verifyJWT, eAdmin, admin)
+app.use('/aluno', verifyJWT, eAluno, aluno)
 
 // Server
 app.listen(PORT, () => {
