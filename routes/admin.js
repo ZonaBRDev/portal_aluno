@@ -105,15 +105,15 @@ router.put('/editarDadosAluno', async (req, res) => {
         await schema.validate(req.body)
 
         await Aluno.findOne({ _id: req.body.alunoId }).then((dados) => {
-            
-                dados.nome = req.body.nome,
+
+            dados.nome = req.body.nome,
                 dados.sobrenome = req.body.sobrenome,
                 dados.telefone = req.body.telefone,
                 dados.endereco = req.body.endereco,
                 dados.numEndereco = req.body.numEndereco,
                 dados.dataNasc = req.body.dataNasc,
                 dados.email = req.body.email
-                dados.save().then(() => {
+            dados.save().then(() => {
                 res.json({
                     msg: 'Dados alterados com sucesso',
                     dados:
@@ -140,12 +140,12 @@ router.put('/editarDadosAluno', async (req, res) => {
 })
 
 router.delete('/deletarAluno', async (req, res) => {
-    await Aluno.deleteOne({_id: req.body.alunoId}).then(() => {
-        res.status(200).json({msg: 'Aluno deletado com sucesso'})
+    await Aluno.deleteOne({ _id: req.body.alunoId }).then(() => {
+        res.status(200).json({ msg: 'Aluno deletado com sucesso' })
     }).catch((err) => {
-        res.json({msg: 'Falha ao deletar aluno, tente novamentem mais tarde!'})
+        res.json({ msg: 'Falha ao deletar aluno, tente novamentem mais tarde!' })
     })
-    
+
 })
 
 // Páginas de Professor
@@ -233,15 +233,15 @@ router.put('/editarDadosProfessor', async (req, res) => {
         await schema.validate(req.body)
 
         await Professor.findOne({ _id: req.body.professorId }).then((dados) => {
-            
-                dados.nome = req.body.nome,
+
+            dados.nome = req.body.nome,
                 dados.sobrenome = req.body.sobrenome,
                 dados.telefone = req.body.telefone,
                 dados.endereco = req.body.endereco,
                 dados.numEndereco = req.body.numEndereco,
                 dados.dataNasc = req.body.dataNasc,
                 dados.email = req.body.email
-                dados.save().then(() => {
+            dados.save().then(() => {
                 res.json({
                     msg: 'Dados alterados com sucesso',
                     dados:
@@ -268,12 +268,12 @@ router.put('/editarDadosProfessor', async (req, res) => {
 })
 
 router.delete('/deletarProfessor', async (req, res) => {
-    await Professor.deleteOne({_id: req.body.professorId}).then(() => {
-        res.status(200).json({msg: 'Professor deletado com sucesso'})
+    await Professor.deleteOne({ _id: req.body.professorId }).then(() => {
+        res.status(200).json({ msg: 'Professor deletado com sucesso' })
     }).catch((err) => {
-        res.json({msg: 'Falha ao deletar professor, tente novamentem mais tarde!'})
+        res.json({ msg: 'Falha ao deletar professor, tente novamentem mais tarde!' })
     })
-    
+
 })
 
 // Páginas de Admin
@@ -312,6 +312,66 @@ router.post('/criarAdmin', async (req, res) => {
             msg: err.errors
         })
     }
+})
+
+router.get('/buscarAdmin', async (req, res) => {
+    const dadosAdmin = await Admin.find()
+    res.status(200).json({
+        msg: 'Lista de Admins:',
+        dados:
+        {
+            dadosAdmin
+        }
+    })
+})
+
+router.get('/editarDadosAdmin/:id', async (req, res) => {
+    const adminId = await req.params.id
+    res.status(200).json({ msg: 'Pegar ID do Aluno pela URL', ID: adminId })
+})
+
+router.put('/editarDadosAdmin', async (req, res) => {
+    const schema = yup.object().shape({
+        email: yup.string().email().required('O e-mail é obrigatório').trim(),
+        senha1: yup.string().min(8, 'A senha deve conter no mínimo 8 caracteres').required('A senha é obrigatória').trim(),
+        senha2: yup.string().oneOf([yup.ref('senha1')], 'As senham devem ser iguais').required('A senha é obrigatória').trim()
+    })
+    try {
+        await schema.validate(req.body)
+        const salt = bcrypt.genSaltSync(10)
+        const hash = bcrypt.hashSync(req.body.senha1, salt)
+
+        await Admin.findOne({ _id: req.body.adminId }).then((dados) => {
+            dados.email = req.body.email
+            dados.senha = hash,
+            dados.save().then(() => {
+                res.json({
+                    msg: 'Dados alterados com sucesso',
+                    dados:
+                    {
+                        email: req.body.email,
+                        senha: req.body.senha1
+                    }
+                })
+            })
+        }).catch((err) => {
+            console.log(err)
+        })
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            msg: err.errors
+        })
+    }
+})
+
+router.delete('/deletarAdmin', async (req, res) => {
+    await Admin.deleteOne({ _id: req.body.adminId }).then(() => {
+        res.status(200).json({ msg: 'Admin deletado com sucesso' })
+    }).catch((err) => {
+        res.json({ msg: 'Falha ao deletar admin, tente novamentem mais tarde!' })
+    })
+
 })
 
 // Criar Turma

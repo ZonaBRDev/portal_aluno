@@ -39,7 +39,7 @@ app.get('/', (req, res) => {
 })
 app.use(login)
 app.use('/prof', verifyJWT, eProf, prof)
-app.use('/admin', verifyJWT, eAdmin, admin)
+app.use('/admin', admin)
 app.use('/aluno', verifyJWT, eAluno, aluno)
 
 // Server
