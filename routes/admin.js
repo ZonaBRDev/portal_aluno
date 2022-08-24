@@ -267,6 +267,15 @@ router.put('/editarDadosProfessor', async (req, res) => {
     }
 })
 
+router.delete('/deletarProfessor', async (req, res) => {
+    await Professor.deleteOne({_id: req.body.professorId}).then(() => {
+        res.status(200).json({msg: 'Professor deletado com sucesso'})
+    }).catch((err) => {
+        res.json({msg: 'Falha ao deletar professor, tente novamentem mais tarde!'})
+    })
+    
+})
+
 // Páginas de Admin
 
 router.get('/criarAdmin', async (req, res) => {
