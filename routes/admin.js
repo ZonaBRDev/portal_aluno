@@ -210,11 +210,57 @@ router.post('/criarTurma', async (req, res) => {
     }
 })
 
+// Inserir Alunos em uma Turma
 
+router.get('/inserirAluno', async (req, res) => {
+    res.json({ msg: 'Página para inserir alunos em uma turma' })
+})
 
+router.post('/inserirAluno', async (req, res) => {
+    const schema = yup.object().shape({
+        nomeAluno: yup.string().required('Informar o aluno é obrigatório'),
+        nomeTurma: yup.string().required('Informar a turma é obrigatório')
+    })
 
+    try {
+        await schema.validate(req.body)
 
+        const dadosAluno = await Aluno.findOne({ nome: req.body.nomeAluno })
+        const dadosTurma = await Turma.findOne({ nome: req.body.nomeTurma })
 
+        if (dadosAluno == null) {
+            res.status(400).json({ msg: 'O aluno informado não está cadastrado' })
+        } else if (dadosTurma == null) {
+            res.status(400).json({ msg: 'A turma informada não está cadastrada' })
+        } else {
+
+            const dadosAluno_Turma = await Aluno_Turma.findOne({ alunoId: dadosAluno._id })
+
+            if (!dadosAluno_Turma) {
+                await new Aluno_Turma({
+                    alunoId: dadosAluno._id,
+                    turmaId: dadosTurma._id
+                }).save()
+                res.status(200).json({
+                    msg: 'Aluno inserido com sucesso',
+                    nomeAluno: req.body.nomeAluno,
+                    alunoId: dadosAluno._id,
+                    nomeTurma: req.body.nomeTurma,
+                    TurmaId: dadosTurma._id,
+                })
+            } else {
+                const nomeTurma = await Turma.findOne({ _id: dadosAluno_Turma.turmaId})
+                res.status(400).json({
+                    msg: `O aluno já está cadastrado na turma: ${nomeTurma.nome}`
+                })
+            }
+        }
+    } catch (err) {
+        return res.status(400).json({
+            msg: err.errors
+        })
+    }
+})
 
 
 
