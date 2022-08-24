@@ -28,7 +28,7 @@ router.post('/criarAluno', async (req, res) => {
     const schema = yup.object().shape({
         nome: yup.string().required('O nome é obrigatório').trim(),
         sobrenome: yup.string().required('O sobrenome é obrigatório').trim(),
-        telefone: yup.string().required("required").matches(phoneRegExp, 'O número informado não é válido').min(11, "Número informado é muito curto").max(12, "O número informado é muito longo"),
+        telefone: yup.string().required("O telefone é obrigatório").matches(phoneRegExp, 'O número informado não é válido').min(11, "Número informado é muito curto").max(12, "O número informado é muito longo"),
         endereco: yup.string().required('O endereço é obrigatório'),
         numEndereco: yup.number(),
         dataNasc: yup.date('É necessário que seja uma data').required('A data de nascimento é obrigatória'),
@@ -95,7 +95,7 @@ router.put('/editarDadosAluno', async (req, res) => {
     const schema = yup.object().shape({
         nome: yup.string().required('O nome é obrigatório').trim(),
         sobrenome: yup.string().required('O sobrenome é obrigatório').trim(),
-        telefone: yup.string().required("required").matches(phoneRegExp, 'O número informado não é válido').min(11, "Número informado é muito curto").max(12, "O número informado é muito longo"),
+        telefone: yup.string().required("O telefone é obrigatório").matches(phoneRegExp, 'O número informado não é válido').min(11, "Número informado é muito curto").max(12, "O número informado é muito longo"),
         endereco: yup.string().required('O endereço é obrigatório'),
         numEndereco: yup.number(),
         dataNasc: yup.date('É necessário que seja uma data').required('A data de nascimento é obrigatória'),
@@ -212,6 +212,59 @@ router.get('/buscarProfessor', async (req, res) => {
             dadosProfessor
         }
     })
+})
+
+router.get('/editarDadosProfessor/:id', async (req, res) => {
+    const professorId = await req.params.id
+    res.status(200).json({ msg: 'Pegar ID do Aluno pela URL', ID: professorId })
+})
+
+router.put('/editarDadosProfessor', async (req, res) => {
+    const schema = yup.object().shape({
+        nome: yup.string().required('O nome é obrigatório').trim(),
+        sobrenome: yup.string().required('O sobrenome é obrigatório').trim(),
+        telefone: yup.string().required("O telefone é obrigatório").matches(phoneRegExp, 'O número informado não é válido').min(11, "Número informado é muito curto").max(12, "O número informado é muito longo"),
+        endereco: yup.string().required('O endereço é obrigatório'),
+        numEndereco: yup.number(),
+        dataNasc: yup.date('É necessário que seja uma data').required('A data de nascimento é obrigatória'),
+        email: yup.string().email().required('O e-mail é obrigatório').trim()
+    })
+    try {
+        await schema.validate(req.body)
+
+        await Professor.findOne({ _id: req.body.professorId }).then((dados) => {
+            
+                dados.nome = req.body.nome,
+                dados.sobrenome = req.body.sobrenome,
+                dados.telefone = req.body.telefone,
+                dados.endereco = req.body.endereco,
+                dados.numEndereco = req.body.numEndereco,
+                dados.dataNasc = req.body.dataNasc,
+                dados.email = req.body.email
+                dados.save().then(() => {
+                res.json({
+                    msg: 'Dados alterados com sucesso',
+                    dados:
+                    {
+                        nome: req.body.nome,
+                        sobrenome: req.body.sobrenome,
+                        telefone: req.body.telefone,
+                        endereco: req.body.endereco,
+                        numEndereco: req.body.numEndereco,
+                        dataNasc: req.body.dataNasc,
+                        email: req.body.email,
+                    }
+                })
+            })
+        }).catch((err) => {
+            console.log(err)
+        })
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            msg: err.errors
+        })
+    }
 })
 
 // Páginas de Admin
