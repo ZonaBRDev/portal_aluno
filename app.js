@@ -44,5 +44,5 @@ app.use('/aluno', verifyJWT, eAluno, aluno)
 
 // Server
 app.listen(PORT, () => {
-    console.log('Servdor rodando na URL: http://localhost:5554/')
+    console.log('Servidor rodando na URL: http://localhost:5554/')
 })

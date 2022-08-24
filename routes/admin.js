@@ -189,19 +189,29 @@ router.post('/criarTurma', async (req, res) => {
         if (dadosProfessor == null) {
             res.status(400).json({ msg: 'O professor selecionado não está cadastrado' })
         } else {
-            await new Turma({
-                nome: req.body.nome,
-                professor: dadosProfessor._id
-            }).save()
-            res.status(200).json({
-                msg: 'Turma criada com sucesso',
-                dados:
-                {
-                    id: dadosProfessor._id,
+
+            const dadosTurma = await Turma.findOne({ nome: req.body.nome })
+
+            if (!dadosTurma) {
+                await new Turma({
                     nome: req.body.nome,
-                    professor: req.body.professor
-                }
-            })
+                    professor: dadosProfessor._id
+                }).save()
+                res.status(200).json({
+                    msg: 'Turma criada com sucesso',
+                    dados:
+                    {
+                        id: dadosProfessor._id,
+                        nome: req.body.nome,
+                        professor: req.body.professor
+                    }
+                })
+            } else {
+                res.status(400).json({
+                    msg: `A turma ${dadosTurma.nome} já existe`
+                })
+            }
+
         }
     } catch (err) {
         return res.json({
@@ -249,7 +259,7 @@ router.post('/inserirAluno', async (req, res) => {
                     TurmaId: dadosTurma._id,
                 })
             } else {
-                const nomeTurma = await Turma.findOne({ _id: dadosAluno_Turma.turmaId})
+                const nomeTurma = await Turma.findOne({ _id: dadosAluno_Turma.turmaId })
                 res.status(400).json({
                     msg: `O aluno já está cadastrado na turma: ${nomeTurma.nome}`
                 })
