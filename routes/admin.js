@@ -92,7 +92,6 @@ router.get('/editarDadosAluno/:id', async (req, res) => {
 })
 
 router.put('/editarDadosAluno', async (req, res) => {
-    const alunoId = await req.body.alunoId
     const schema = yup.object().shape({
         nome: yup.string().required('O nome é obrigatório').trim(),
         sobrenome: yup.string().required('O sobrenome é obrigatório').trim(),
@@ -105,7 +104,7 @@ router.put('/editarDadosAluno', async (req, res) => {
     try {
         await schema.validate(req.body)
 
-        await Aluno.findOne({ _id: alunoId }).then((dados) => {
+        await Aluno.findOne({ _id: req.body.alunoId }).then((dados) => {
             
                 dados.nome = req.body.nome,
                 dados.sobrenome = req.body.sobrenome,
@@ -140,6 +139,14 @@ router.put('/editarDadosAluno', async (req, res) => {
     }
 })
 
+router.delete('/deletarAluno', async (req, res) => {
+    await Aluno.deleteOne({_id: req.body.alunoId}).then(() => {
+        res.status(200).json({msg: 'Aluno deletado com sucesso'})
+    }).catch((err) => {
+        res.json({msg: 'Falha ao deletar aluno, tente novamentem mais tarde!'})
+    })
+    
+})
 
 // Páginas de Professor
 router.get('/criarProfessor', async (req, res) => {
