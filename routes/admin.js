@@ -203,6 +203,17 @@ router.post('/criarProfessor', async (req, res) => {
     }
 })
 
+router.get('/buscarProfessor', async (req, res) => {
+    const dadosProfessor = await Professor.find()
+    res.status(200).json({
+        msg: 'Lista de professores:',
+        dados:
+        {
+            dadosProfessor
+        }
+    })
+})
+
 // Páginas de Admin
 
 router.get('/criarAdmin', async (req, res) => {
