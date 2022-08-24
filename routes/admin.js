@@ -75,6 +75,71 @@ router.post('/criarAluno', async (req, res) => {
     }
 })
 
+router.get('/buscarAlunos', async (req, res) => {
+    const dadosAluno = await Aluno.find()
+    res.status(200).json({
+        msg: 'Lista de alunos:',
+        dados:
+        {
+            dadosAluno
+        }
+    })
+})
+
+router.get('/editarDadosAluno/:id', async (req, res) => {
+    const alunoId = await req.params.id
+    res.status(200).json({ msg: 'Pegar ID do Aluno pela URL', ID: alunoId })
+})
+
+router.put('/editarDadosAluno', async (req, res) => {
+    const alunoId = await req.body.alunoId
+    const schema = yup.object().shape({
+        nome: yup.string().required('O nome é obrigatório').trim(),
+        sobrenome: yup.string().required('O sobrenome é obrigatório').trim(),
+        telefone: yup.string().required("required").matches(phoneRegExp, 'O número informado não é válido').min(11, "Número informado é muito curto").max(12, "O número informado é muito longo"),
+        endereco: yup.string().required('O endereço é obrigatório'),
+        numEndereco: yup.number(),
+        dataNasc: yup.date('É necessário que seja uma data').required('A data de nascimento é obrigatória'),
+        email: yup.string().email().required('O e-mail é obrigatório').trim()
+    })
+    try {
+        await schema.validate(req.body)
+
+        await Aluno.findOne({ _id: alunoId }).then((dados) => {
+            
+                dados.nome = req.body.nome,
+                dados.sobrenome = req.body.sobrenome,
+                dados.telefone = req.body.telefone,
+                dados.endereco = req.body.endereco,
+                dados.numEndereco = req.body.numEndereco,
+                dados.dataNasc = req.body.dataNasc,
+                dados.email = req.body.email
+                dados.save().then(() => {
+                res.json({
+                    msg: 'Dados alterados com sucesso',
+                    dados:
+                    {
+                        nome: req.body.nome,
+                        sobrenome: req.body.sobrenome,
+                        telefone: req.body.telefone,
+                        endereco: req.body.endereco,
+                        numEndereco: req.body.numEndereco,
+                        dataNasc: req.body.dataNasc,
+                        email: req.body.email,
+                    }
+                })
+            })
+        }).catch((err) => {
+            console.log(err)
+        })
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            msg: err.errors
+        })
+    }
+})
+
 
 // Páginas de Professor
 router.get('/criarProfessor', async (req, res) => {
@@ -271,6 +336,8 @@ router.post('/inserirAluno', async (req, res) => {
         })
     }
 })
+
+
 
 
 
