@@ -35,7 +35,6 @@ mongoose.connect('mongodb://localhost/portalaluno', async () => {
 
 // Routes
 app.get('/', (req, res) => {
-    // res.sendFile(__dirname+'/views/geral/index.html')
     res.json('Login Page')
 })
 app.use(login)

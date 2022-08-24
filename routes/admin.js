@@ -12,7 +12,10 @@ require('../models/Professor')
 const Professor = mongoose.model('professores')
 require('../models/Admin')
 const Admin = mongoose.model('admins')
-
+require('../models/Turma')
+const Turma = mongoose.model('turmas')
+require('../models/Aluno_Turma')
+const Aluno_Turma = mongoose.model('alunos_turmas')
 
 
 // Páginas de Aluno
@@ -165,5 +168,56 @@ router.post('/criarAdmin', async (req, res) => {
         })
     }
 })
+
+// Criar Turma
+
+router.get('/criarTurma', async (req, res) => {
+    res.status(200).json({ msg: 'Página para Criar Turma' })
+})
+
+router.post('/criarTurma', async (req, res) => {
+    const schema = yup.object().shape({
+        nome: yup.string().required('O nome da turma é obrigatório').trim(),
+        professor: yup.string().required('O nome do professor é obrigatório')
+    })
+
+    try {
+        await schema.validate(req.body)
+
+        const dadosProfessor = await Professor.findOne({ nome: req.body.professor })
+
+        if (dadosProfessor == null) {
+            res.status(400).json({ msg: 'O professor selecionado não está cadastrado' })
+        } else {
+            await new Turma({
+                nome: req.body.nome,
+                professor: dadosProfessor._id
+            }).save()
+            res.status(200).json({
+                msg: 'Turma criada com sucesso',
+                dados:
+                {
+                    id: dadosProfessor._id,
+                    nome: req.body.nome,
+                    professor: req.body.professor
+                }
+            })
+        }
+    } catch (err) {
+        return res.json({
+            msg: err.errors
+        })
+    }
+})
+
+
+
+
+
+
+
+
+
+
 
 module.exports = router
