@@ -344,16 +344,16 @@ router.put('/editarDadosAdmin', async (req, res) => {
         await Admin.findOne({ _id: req.body.adminId }).then((dados) => {
             dados.email = req.body.email
             dados.senha = hash,
-            dados.save().then(() => {
-                res.json({
-                    msg: 'Dados alterados com sucesso',
-                    dados:
-                    {
-                        email: req.body.email,
-                        senha: req.body.senha1
-                    }
+                dados.save().then(() => {
+                    res.json({
+                        msg: 'Dados alterados com sucesso',
+                        dados:
+                        {
+                            email: req.body.email,
+                            senha: req.body.senha1
+                        }
+                    })
                 })
-            })
         }).catch((err) => {
             console.log(err)
         })
@@ -423,6 +423,72 @@ router.post('/criarTurma', async (req, res) => {
             msg: err.errors
         })
     }
+})
+
+router.get('/buscarTurma', async (req, res) => {
+    const dadosTurma = await Turma.find()
+    res.status(200).json({
+        msg: 'Lista de Turmas:',
+        dados:
+        {
+            dadosTurma
+        }
+    })
+})
+
+router.get('/editarDadosTurma/:id', async (req, res) => {
+    const turmaId = await req.params.id
+    res.status(200).json({ msg: 'Pegar ID do Aluno pela URL', ID: turmaId })
+})
+
+router.put('/editarDadosTurma', async (req, res) => {
+    const schema = yup.object().shape({
+        nome: yup.string().required('O nome da turma é obrigatório').trim(),
+        professor: yup.string().required('O nome do professor é obrigatório')
+    })
+
+    try {
+        await schema.validate(req.body)
+
+        const dadosProfessor = await Professor.findOne({ nome: req.body.professor })
+        const dadosTurma = await Turma.findOne({nome: req.body.nome})
+
+        if (dadosProfessor == null) {
+            res.status(400).json({ msg: 'O professor selecionado não está cadastrado' })
+        } else {
+            await Turma.findOne({ _id: req.body.turmaId }).then((dados) => {
+                dados.nome = req.body.nome
+                dados.professor = dadosProfessor._id,
+                    dados.save().then(() => {
+                        res.json({
+                            msg: 'Dados alterados com sucesso',
+                            dados:
+                            {
+                                nomeTurma: req.body.nome,
+                                nomeProfessor: req.body.professor,
+                                professorID: dadosProfessor._id
+                            }
+                        })
+                    })
+            }).catch((err) => {
+                console.log(err)
+            })
+        }
+    } catch (err) {
+        return res.status(400).json({
+            error: true,
+            msg: err.errors
+        })
+    }
+})
+
+router.delete('/deletarTurma', async (req, res) => {
+    await Turma.deleteOne({ _id: req.body.turmaId }).then(() => {
+        res.status(200).json({ msg: 'Turma deletada com sucesso' })
+    }).catch((err) => {
+        res.json({ msg: 'Falha ao deletar turma, tente novamentem mais tarde!' })
+    })
+
 })
 
 // Inserir Alunos em uma Turma
