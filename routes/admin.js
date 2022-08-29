@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const router = express.Router()
 const yup = require('yup')
 const bcrypt = require('bcryptjs')
+const { json } = require('express')
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
 // models
@@ -77,11 +78,24 @@ router.post('/criarAluno', async (req, res) => {
 
 router.get('/buscarAlunos', async (req, res) => {
     const dadosAluno = await Aluno.find()
+    const todosAlunos = []
+
+    for (let i = dadosAluno.length -1; i >= 0; i--) {
+        const dadosAlunoTurma = await Aluno_Turma.findOne({alunoId: dadosAluno[i]._id})
+        const dadosTurma = await Turma.findOne({_id: dadosAlunoTurma.turmaId})
+
+        todosAlunos.push({
+            infoPessoal: dadosAluno[i],
+            dadosAlunoTurma: dadosAlunoTurma,
+            nomeTurma: dadosTurma
+        })
+    }
+
     res.status(200).json({
         msg: 'Lista de alunos:',
         dados:
         {
-            dadosAluno
+            todosAlunos
         }
     })
 })
@@ -451,7 +465,7 @@ router.put('/editarDadosTurma', async (req, res) => {
         await schema.validate(req.body)
 
         const dadosProfessor = await Professor.findOne({ nome: req.body.professor })
-        const dadosTurma = await Turma.findOne({nome: req.body.nome})
+        const dadosTurma = await Turma.findOne({ nome: req.body.nome })
 
         if (dadosProfessor == null) {
             res.status(400).json({ msg: 'O professor selecionado não está cadastrado' })
@@ -542,6 +556,7 @@ router.post('/inserirAluno', async (req, res) => {
         })
     }
 })
+
 
 
 
