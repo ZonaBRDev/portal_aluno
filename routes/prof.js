@@ -1,8 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
-const SECRET = 'passwell'
-const jwt = require("jsonwebtoken")
 
 // models
 require('../models/Professor')
@@ -21,8 +19,8 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/turmas', async (req, res) => {
-    // const profid = req.userId
-    const profid = '63068b742cf10de021b30882'
+    const profid = req.userId
+    // const profid = '63068b742cf10de021b30882'
     const turmas = await Turma.find({ professor: profid }, { '_id': 1, 'nome': 1 })
     console.log(profid)
     if (turmas == '') {

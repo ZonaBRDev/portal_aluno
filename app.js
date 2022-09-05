@@ -38,8 +38,8 @@ app.get('/', (req, res) => {
     res.json('Login Page')
 })
 app.use(login)
-app.use('/prof', prof)
-app.use('/admin', admin)
+app.use('/prof', verifyJWT, eProf, prof)
+app.use('/admin', verifyJWT, eAdmin, admin)
 app.use('/aluno', verifyJWT, eAluno, aluno)
 
 // Server

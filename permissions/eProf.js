@@ -18,7 +18,7 @@ function eProf(req, res, next) {
                     res.status(401).json({ status: 401, msg: 'Acesso negado' }).end()
                 }
             }).catch((err) => {
-                res.status(401).json({ status: 401, msg: 'O usuário não é um ADM' }).end()
+                res.status(401).json({ status: 401, msg: 'O usuário não é um Professor' }).end()
             })
         }
     })
