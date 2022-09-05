@@ -35,7 +35,8 @@ router.post('/loginAluno', async (req, res) => {
         } else if (!(await bcrypt.compare(req.body.senha, User.senha))) {
             res.status(401).json({ msg: 'Senha incorreta' })
         } else {
-            const token = jwt.sign({ userId: User._id }, SECRET, { expiresIn: 600 })
+            // const token = jwt.sign({ userId: User._id }, SECRET, { expiresIn: 600 })
+            const token = jwt.sign({ userId: User._id }, SECRET, {expiresIn: 999999999})
             res.status(200).json({
                 msg: 'Aluno logado com sucesso',
                 token: token

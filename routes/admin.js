@@ -17,7 +17,8 @@ require('../models/Turma')
 const Turma = mongoose.model('turmas')
 require('../models/Aluno_Turma')
 const Aluno_Turma = mongoose.model('alunos_turmas')
-
+require('../models/Boletim')
+const Boletim = mongoose.model('boletins')
 
 // Páginas de Aluno
 router.get('/criarAluno', async (req, res) => {
@@ -53,6 +54,7 @@ router.post('/criarAluno', async (req, res) => {
             email: req.body.email,
             senha: hash
         }).save()
+
 
         res.json({
             msg: 'Aluno criado com sucesso.',
@@ -535,6 +537,9 @@ router.post('/inserirAluno', async (req, res) => {
                 await new Aluno_Turma({
                     alunoId: dadosAluno._id,
                     turmaId: dadosTurma._id
+                }).save()
+                await new Boletim({
+                    alunoId: dadosAluno._id
                 }).save()
                 res.status(200).json({
                     msg: 'Aluno inserido com sucesso',

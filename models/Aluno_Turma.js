@@ -11,6 +11,10 @@ const Aluno_Turma = Schema({
         type: Schema.Types.ObjectId,
         ref: 'turmas',
         required: true
+    },
+    date: {
+        type: Date,
+        default: Date.now()
     }
 })
 
